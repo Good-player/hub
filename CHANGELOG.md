@@ -1,3 +1,6 @@
+## v1.1.6
+- Moved version display to the logo area in the sidebar
+
 ## v1.1.5
 - Force changelog to bypass browser cache on every load
 
