@@ -1,3 +1,10 @@
+## v1.2.1
+- Fixed instant layout jump when opening detail panel — now smoothly animates width
+- Panel content fades and slides in after width expands, fades out before collapsing
+- Redesigned Settings section with radio-style language selector and animated dot indicator
+- Added card press (scale down) animation on click
+- URL box glows on hover
+
 ## v1.2.0
 - Click a card to open a detail panel sliding in from the right
 - Detail panel shows icon, name, badge, description, creator, URL

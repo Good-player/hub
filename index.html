@@ -421,14 +421,9 @@
     }
 
     /* ── Detail Panel ── */
-    @keyframes slideInPanel {
-      from { opacity: 0; transform: translateX(24px) scale(0.97); }
-      to   { opacity: 1; transform: translateX(0)    scale(1); }
-    }
-
-    @keyframes slideOutPanel {
-      from { opacity: 1; transform: translateX(0)    scale(1); }
-      to   { opacity: 0; transform: translateX(24px) scale(0.97); }
+    @keyframes dpContentIn {
+      from { opacity: 0; transform: translateX(16px); }
+      to   { opacity: 1; transform: translateX(0); }
     }
 
     @keyframes dpItemIn {
@@ -447,28 +442,49 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
+      transition: none;
     }
 
     .detail-panel {
-      width: 300px;
+      width: 0;
       flex-shrink: 0;
+      overflow: hidden;
       background: var(--sidebar);
-      border-left: 1px solid var(--border);
-      display: none;
-      flex-direction: column;
-      padding: 24px 20px;
-      gap: 0;
+      border-left: 0px solid var(--border);
       min-height: 100vh;
-      position: relative;
+      transition: width 0.32s cubic-bezier(0.16,1,0.3,1),
+                  border-left-width 0.32s cubic-bezier(0.16,1,0.3,1);
     }
 
     .detail-panel.open {
-      display: flex;
-      animation: slideInPanel 0.28s cubic-bezier(0.16,1,0.3,1) both;
+      width: 300px;
+      border-left-width: 1px;
     }
 
-    .detail-panel.closing {
-      animation: slideOutPanel 0.2s ease both;
+    .dp-content {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      min-height: 100vh;
+      opacity: 0;
+      transform: translateX(16px);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      pointer-events: none;
+    }
+
+    .detail-panel.open .dp-content {
+      opacity: 1;
+      transform: translateX(0);
+      transition-delay: 0.14s;
+      pointer-events: auto;
+    }
+
+    .detail-panel.closing .dp-content {
+      opacity: 0;
+      transform: translateX(16px);
+      transition-delay: 0s;
+      transition-duration: 0.12s;
     }
 
     .dp-topbar {
@@ -476,7 +492,6 @@
       align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 20px;
-      animation: dpItemIn 0.3s ease 0.05s both;
     }
 
     .dp-icon {
@@ -519,7 +534,6 @@
       color: var(--text-primary);
       letter-spacing: -0.01em;
       margin-bottom: 8px;
-      animation: dpItemIn 0.3s ease 0.1s both;
     }
 
     .dp-badge {
@@ -532,21 +546,18 @@
       padding: 3px 10px;
       border-radius: 100px;
       margin-bottom: 18px;
-      animation: dpItemIn 0.3s ease 0.13s both;
     }
 
     .dp-divider {
       height: 1px;
       background: var(--border);
       margin: 16px 0;
-      animation: dpItemIn 0.3s ease 0.15s both;
     }
 
     .dp-desc {
       font-size: 13px;
       color: var(--text-secondary);
       line-height: 1.65;
-      animation: dpItemIn 0.3s ease 0.17s both;
     }
 
     .dp-meta-row {
@@ -556,7 +567,6 @@
       font-size: 12px;
       color: var(--text-secondary);
       margin-top: 16px;
-      animation: dpItemIn 0.3s ease 0.2s both;
     }
 
     .dp-meta-row strong {
@@ -574,7 +584,11 @@
       color: var(--text-tertiary);
       word-break: break-all;
       font-family: monospace;
-      animation: dpItemIn 0.3s ease 0.23s both;
+      transition: border-color 0.2s;
+    }
+
+    .dp-url-box:hover {
+      border-color: rgba(212,165,116,0.35);
     }
 
     .dp-actions {
@@ -582,7 +596,6 @@
       flex-direction: column;
       gap: 8px;
       margin-top: 20px;
-      animation: dpItemIn 0.3s ease 0.26s both;
     }
 
     .dp-open-btn {
@@ -634,15 +647,88 @@
     }
 
     /* Selected card state */
+    .card {
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+    }
+
     .card.selected {
       border-color: var(--accent);
       background: var(--surface-hover);
       box-shadow: inset 3px 0 0 var(--accent);
     }
 
-    /* Make cards clickable divs */
-    .card {
+    .card:active {
+      transform: scale(0.99);
+    }
+
+    /* ── Settings ── */
+    .settings-block {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .settings-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px 8px;
+    }
+
+    .settings-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 8px 10px 4px;
+      opacity: 0.7;
+    }
+
+    .lang-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 10px;
+      border-radius: 8px;
       cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: background 0.15s, color 0.15s;
+      position: relative;
+    }
+
+    .lang-row:hover {
+      background: var(--surface-hover);
+      color: var(--text-primary);
+    }
+
+    .lang-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      margin-left: auto;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+
+    .lang-row.active {
+      color: var(--text-primary);
+    }
+
+    .lang-row.active .lang-dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: scale(1.2);
     }
 
     /* ── Mobile ── */
@@ -664,7 +750,7 @@
         <polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
       Hub
-      <span class="sidebar-version" style="margin-left:auto;">v1.2.0</span>
+      <span class="sidebar-version" style="margin-left:auto;">v1.2.1</span>
     </div>
 
     <div class="changelog-header">
@@ -679,13 +765,13 @@
     <div class="changelog" id="changelog"><div class="cl-spinner"></div></div>
 
     <!-- Settings -->
-    <div class="lang-section" style="margin-top: auto;">
-      <div class="sidebar-label" data-i18n="nav-settings"></div>
-      <div class="sidebar-label" style="font-size:10px; margin-bottom:2px;" data-i18n="nav-language"></div>
-      <button class="sidebar-item" onclick="setLang('sv')">🇸🇪 Svenska</button>
-      <button class="sidebar-item" onclick="setLang('en')">🇬🇧 English</button>
-      <button class="sidebar-item" onclick="setLang('ar')">🇸🇦 العربية</button>
-      <button class="sidebar-item" onclick="setLang('ru')">🇷🇺 Русский</button>
+    <div class="settings-block">
+      <div class="settings-title" data-i18n="nav-settings"></div>
+      <div class="settings-section-label" data-i18n="nav-language"></div>
+      <button class="lang-row" onclick="setLang('sv')">🇸🇪 Svenska<span class="lang-dot"></span></button>
+      <button class="lang-row" onclick="setLang('en')">🇬🇧 English<span class="lang-dot"></span></button>
+      <button class="lang-row" onclick="setLang('ar')">🇸🇦 العربية<span class="lang-dot"></span></button>
+      <button class="lang-row" onclick="setLang('ru')">🇷🇺 Русский<span class="lang-dot"></span></button>
     </div>
 
   </nav>
@@ -763,32 +849,34 @@
 
     <!-- Detail Panel -->
     <div class="detail-panel" id="detail-panel">
-      <div class="dp-topbar">
-        <div class="dp-icon" id="dp-icon"></div>
-        <button class="dp-close" onclick="closeProject()">✕</button>
-      </div>
-      <div class="dp-name" id="dp-name"></div>
-      <div class="dp-badge" id="dp-badge"></div>
-      <div class="dp-desc" id="dp-desc"></div>
-      <div class="dp-divider"></div>
-      <div class="dp-meta-row">
-        <span data-i18n="created-by"></span>&nbsp;<strong id="dp-creator"></strong>
-      </div>
-      <div class="dp-url-box" id="dp-url"></div>
-      <div class="dp-actions">
-        <a class="dp-open-btn" id="dp-link" href="#" target="_blank" rel="noopener">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-          </svg>
-          <span data-i18n="dp-open"></span>
-        </a>
-        <button class="dp-copy-btn" id="dp-copy" onclick="copyLink()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-          </svg>
-          <span data-i18n="dp-copy"></span>
-        </button>
+      <div class="dp-content">
+        <div class="dp-topbar">
+          <div class="dp-icon" id="dp-icon"></div>
+          <button class="dp-close" onclick="closeProject()">✕</button>
+        </div>
+        <div class="dp-name" id="dp-name"></div>
+        <div class="dp-badge" id="dp-badge"></div>
+        <div class="dp-desc" id="dp-desc"></div>
+        <div class="dp-divider"></div>
+        <div class="dp-meta-row">
+          <span data-i18n="created-by"></span>&nbsp;<strong id="dp-creator"></strong>
+        </div>
+        <div class="dp-url-box" id="dp-url"></div>
+        <div class="dp-actions">
+          <a class="dp-open-btn" id="dp-link" href="#" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            <span data-i18n="dp-open"></span>
+          </a>
+          <button class="dp-copy-btn" id="dp-copy" onclick="copyLink()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span data-i18n="dp-copy"></span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -880,7 +968,7 @@
       });
 
       // Mark active lang button
-      document.querySelectorAll('.lang-section .sidebar-item').forEach(btn => {
+      document.querySelectorAll('.lang-row').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('onclick') === `setLang('${code}')`);
       });
 
@@ -1000,9 +1088,10 @@
     function closeProject() {
       const panel = document.getElementById('detail-panel');
       panel.classList.add('closing');
-      panel.addEventListener('animationend', () => {
+      // Wait for content to fade out, then collapse width
+      setTimeout(() => {
         panel.classList.remove('open', 'closing');
-      }, { once: true });
+      }, 160);
       document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
       activeProject = null;
     }
