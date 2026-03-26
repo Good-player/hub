@@ -1,3 +1,11 @@
+## v1.2.0
+- Click a card to open a detail panel sliding in from the right
+- Detail panel shows icon, name, badge, description, creator, URL
+- "Open project" button and "Copy link" button in panel
+- Selected card gets highlighted with accent border
+- Panel items animate in with stagger
+- Close panel by clicking X or clicking the same card again
+
 ## v1.1.7
 - Changelog auto-scrolls to top on load
 - Spinning loader while changelog is fetching
