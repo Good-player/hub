@@ -1,19 +1,24 @@
+## v1.1.4
+- Removed project list from sidebar
+- Added Settings section to sidebar
+- Translated changelog to English
+
 ## v1.1.3
-- Lägg till changelog i sidofältet
-- Tar bort GitHub-länk och statistikwidget
+- Added changelog to sidebar
+- Removed GitHub link and stats widget
 
 ## v1.1.2
-- Lade till statistikwidget i sidofältet
-- Lade till GitHub-länk i sidofältet
+- Added stats widget to sidebar
+- Added GitHub link to sidebar
 
 ## v1.1.1
-- Bytte till semantisk versionshantering (1.1.X)
+- Switched to semantic patch versioning (1.1.X)
 
 ## v1.1.0
-- Versionsvisning tillagd i sidofältet
+- Added version display to sidebar
 
 ## v1.0.0
-- Ny design inspirerad av Claude chat
-- Sidofält med projektlänkar och språkväxlare
-- Stöd för svenska, engelska, arabiska och ryska
-- Mörkt tema med rena kort
+- New design inspired by Claude chat
+- Sidebar with project links and language switcher
+- Support for Swedish, English, Arabic and Russian
+- Dark theme with clean cards
