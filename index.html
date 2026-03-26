@@ -6,7 +6,7 @@
   <title>Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -15,334 +15,420 @@
     }
 
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a24;
-      --surface-hover: #22222f;
-      --border: rgba(255,255,255,0.07);
-      --accent: #7c5cfc;
-      --accent-glow: rgba(124,92,252,0.35);
-      --text-primary: #f0f0f5;
-      --text-secondary: #8888a8;
-      --badge-bg: rgba(124,92,252,0.15);
-      --badge-color: #a98bff;
+      --bg: #1c1c1e;
+      --sidebar: #161618;
+      --surface: #232325;
+      --surface-hover: #2a2a2d;
+      --border: #3a3a3d;
+      --text-primary: #ececec;
+      --text-secondary: #8e8e93;
+      --text-tertiary: #58585d;
+      --accent: #d4a574;
+      --badge-bg: #2e2e31;
+      --badge-color: #8e8e93;
     }
 
     body {
-      background-color: var(--bg);
-      background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,92,252,0.18) 0%, transparent 70%);
-      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       min-height: 100vh;
-      padding: 60px 20px 80px;
+      display: flex;
       color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.5;
     }
 
-    /* RTL support for Arabic */
     body.rtl { direction: rtl; }
 
-    /* ── Language switcher ── */
-    .lang-switcher {
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
       display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 48px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      padding: 16px 12px;
+      gap: 4px;
+      min-height: 100vh;
     }
 
-    .lang-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      padding: 7px 16px;
-      border-radius: 100px;
-      font-size: 0.82rem;
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px 20px;
+      color: var(--text-primary);
       font-weight: 600;
+      font-size: 15px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .sidebar-logo svg {
+      width: 22px;
+      height: 22px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .sidebar-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      margin-top: 8px;
+      margin-bottom: 2px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13.5px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
       font-family: inherit;
     }
 
-    .lang-btn:hover {
-      border-color: rgba(124,92,252,0.4);
+    .sidebar-item svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .sidebar-item:hover {
+      background: var(--surface-hover);
       color: var(--text-primary);
     }
 
-    .lang-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
+    .sidebar-item.active {
+      background: var(--surface);
+      color: var(--text-primary);
     }
 
-    /* ── Header ── */
-    header {
-      text-align: center;
-      margin-bottom: 56px;
+    /* Language pills at bottom of sidebar */
+    .lang-section {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
-    header h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #fff 30%, #a98bff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .lang-section .sidebar-label {
+      padding: 0 10px 4px;
+      margin: 0;
     }
 
-    header p {
-      margin-top: 10px;
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 32px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .topbar-sub {
+      font-size: 13px;
       color: var(--text-secondary);
-      font-size: 1rem;
     }
 
-    /* ── Grid ── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      max-width: 900px;
-      margin: 0 auto;
+    /* ── Content ── */
+    .content {
+      padding: 32px;
+      flex: 1;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .section-header {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 12px;
     }
 
     /* ── Card ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px 28px 24px;
+      border-radius: 12px;
+      padding: 18px 20px;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 16px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: radial-gradient(circle at top left, rgba(124,92,252,0.08), transparent 60%);
-      pointer-events: none;
+      margin-bottom: 8px;
+      transition: background 0.15s;
+      text-decoration: none;
+      color: inherit;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,92,252,0.3);
-      border-color: rgba(124,92,252,0.35);
+      background: var(--surface-hover);
     }
 
-    .card-header {
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--badge-bg);
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-body {
+      flex: 1;
+      min-width: 0;
     }
 
     .card-title {
-      font-size: 1.25rem;
-      font-weight: 700;
+      font-size: 14px;
+      font-weight: 600;
       color: var(--text-primary);
-      letter-spacing: -0.01em;
+      margin-bottom: 2px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
     }
 
     .card-badge {
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      font-size: 11px;
+      font-weight: 500;
       background: var(--badge-bg);
       color: var(--badge-color);
-      padding: 4px 10px;
+      border: 1px solid var(--border);
+      padding: 2px 8px;
       border-radius: 100px;
-      white-space: nowrap;
+    }
+
+    /* ── Arrow ── */
+    .card-arrow {
+      color: var(--text-tertiary);
       flex-shrink: 0;
     }
 
-    .card-description {
-      font-size: 0.92rem;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      flex: 1;
-    }
-
-    .card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .card-author {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-    }
-
-    .card-author strong {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    .card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 9px 18px;
-      border-radius: 10px;
-      transition: background 0.2s, box-shadow 0.2s;
-      white-space: nowrap;
-    }
-
-    .card-link:hover {
-      background: #6b4de8;
-      box-shadow: 0 0 18px var(--accent-glow);
-    }
-
-    .card-link svg {
+    .card-arrow svg {
       width: 14px;
       height: 14px;
-      flex-shrink: 0;
     }
 
-    .site-footer {
-      text-align: center;
-      margin-top: 60px;
-      color: var(--text-secondary);
-      font-size: 0.8rem;
-      opacity: 0.5;
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .sidebar { display: none; }
+      .content { padding: 20px 16px; }
+      .topbar { padding: 12px 16px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="lang-switcher">
-    <button class="lang-btn" onclick="setLang('sv')">🇸🇪 Svenska</button>
-    <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
-    <button class="lang-btn" onclick="setLang('ar')">🇸🇦 العربية</button>
-    <button class="lang-btn" onclick="setLang('ru')">🇷🇺 Русский</button>
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Hub
+    </div>
+
+    <div class="sidebar-label" data-i18n="nav-projects"></div>
+    <a class="sidebar-item active" href="https://azizbekovski.github.io/spin-the-vodka/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M8 12l4-4 4 4M12 8v8"/>
+      </svg>
+      Spin the vodka
+    </a>
+    <a class="sidebar-item" href="https://good-player.github.io/chatp2p/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      CHATp2p
+    </a>
+
+    <!-- Language switcher -->
+    <div class="lang-section">
+      <div class="sidebar-label" data-i18n="nav-language"></div>
+      <button class="sidebar-item" onclick="setLang('sv')">🇸🇪 Svenska</button>
+      <button class="sidebar-item" onclick="setLang('en')">🇬🇧 English</button>
+      <button class="sidebar-item" onclick="setLang('ar')">🇸🇦 العربية</button>
+      <button class="sidebar-item" onclick="setLang('ru')">🇷🇺 Русский</button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" data-i18n="title">Hub</div>
+        <div class="topbar-sub" data-i18n="subtitle"></div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="section-header" data-i18n="nav-projects"></div>
+
+      <!-- ══ KORT 1 ══ -->
+      <a class="card" href="https://azizbekovski.github.io/spin-the-vodka/" target="_blank" rel="noopener">
+        <div class="card-icon">🍸</div>
+        <div class="card-body">
+          <div class="card-title">Spin the vodka</div>
+          <div class="card-desc" data-i18n="stv-desc"></div>
+        </div>
+        <div class="card-meta">
+          <span class="card-badge" data-i18n="badge-game"></span>
+          <span data-i18n="by-azizbek"></span>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- ══ KORT 2 ══ -->
+      <a class="card" href="https://good-player.github.io/chatp2p/" target="_blank" rel="noopener">
+        <div class="card-icon">💬</div>
+        <div class="card-body">
+          <div class="card-title">CHATp2p</div>
+          <div class="card-desc" data-i18n="chat-desc"></div>
+        </div>
+        <div class="card-meta">
+          <span class="card-badge" data-i18n="badge-chat"></span>
+          <span data-i18n="by-william"></span>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+      </a>
+
+      <!-- ══ LÄGG TILL FLER KORT HÄR ══
+      <a class="card" href="https://din-länk.com" target="_blank" rel="noopener">
+        <div class="card-icon">🔧</div>
+        <div class="card-body">
+          <div class="card-title">Titel</div>
+          <div class="card-desc">Beskrivning</div>
+        </div>
+        <div class="card-meta">
+          <span class="card-badge" data-i18n="badge-game"></span>
+          <span>Namn</span>
+        </div>
+        <div class="card-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+      </a>
+      ══ SLUT PÅ MALL ══ -->
+
+    </div>
   </div>
-
-  <header>
-    <h1 data-i18n="title">Hub</h1>
-    <p data-i18n="subtitle"></p>
-  </header>
-
-  <div class="grid">
-
-    <!-- ══ KORT 1 ══ -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Spin the vodka</span>
-        <span class="card-badge" data-i18n="badge-game"></span>
-      </div>
-      <p class="card-description" data-i18n="stv-desc"></p>
-      <div class="card-footer">
-        <div class="card-author"><span data-i18n="created-by"></span> <strong>Azizbek</strong></div>
-        <a class="card-link" href="https://azizbekovski.github.io/spin-the-vodka/" target="_blank" rel="noopener">
-          <span data-i18n="open"></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 17L17 7M17 7H7M17 7v10"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-
-    <!-- ══ KORT 2 ══ -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">CHATp2p</span>
-        <span class="card-badge" data-i18n="badge-chat"></span>
-      </div>
-      <p class="card-description" data-i18n="chat-desc"></p>
-      <div class="card-footer">
-        <div class="card-author"><span data-i18n="created-by"></span> <strong>William</strong></div>
-        <a class="card-link" href="https://good-player.github.io/chatp2p/" target="_blank" rel="noopener">
-          <span data-i18n="open"></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 17L17 7M17 7H7M17 7v10"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-
-    <!-- ══ LÄGG TILL FLER KORT HÄR ══
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Titel</span>
-        <span class="card-badge" data-i18n="badge-game"></span>
-      </div>
-      <p class="card-description">Beskrivning av projektet.</p>
-      <div class="card-footer">
-        <div class="card-author"><span data-i18n="created-by"></span> <strong>Namn</strong></div>
-        <a class="card-link" href="https://din-länk.com" target="_blank" rel="noopener">
-          <span data-i18n="open"></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 17L17 7M17 7H7M17 7v10"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-    ══ SLUT PÅ MALL ══ -->
-
-  </div>
-
-  <footer class="site-footer" data-i18n="footer"></footer>
 
   <script>
     const translations = {
       sv: {
         title: "Hub",
         subtitle: "En hub för personliga projekt",
+        "nav-projects": "Projekt",
+        "nav-language": "Språk",
         "badge-game": "Spel",
         "badge-chat": "Chatt",
-        "stv-desc": "En spel som uppdaterar ofta. En spel som cookie clicker men 🇷🇺🇷🇺🇷🇺.",
+        "stv-desc": "En spel som uppdaterar ofta. Som cookie clicker men 🇷🇺🇷🇺🇷🇺.",
         "chat-desc": "Har du ingen discord? Använd CHATP2P.",
-        "created-by": "Skapades av",
-        "open": "Öppna",
-        "footer": "Hub — alla projekt på ett ställe",
+        "by-azizbek": "Azizbek",
+        "by-william": "William",
         dir: "ltr",
       },
       en: {
         title: "Hub",
         subtitle: "A hub for personal projects",
+        "nav-projects": "Projects",
+        "nav-language": "Language",
         "badge-game": "Game",
         "badge-chat": "Chat",
         "stv-desc": "A game that updates often. Like cookie clicker but 🇷🇺🇷🇺🇷🇺.",
-        "chat-desc": "No discord? Use CHATP2P.",
-        "created-by": "Created by",
-        "open": "Open",
-        "footer": "Hub — all projects in one place",
+        "chat-desc": "No Discord? Use CHATP2P.",
+        "by-azizbek": "Azizbek",
+        "by-william": "William",
         dir: "ltr",
       },
       ar: {
         title: "Hub",
         subtitle: "مركز للمشاريع الشخصية",
+        "nav-projects": "المشاريع",
+        "nav-language": "اللغة",
         "badge-game": "لعبة",
         "badge-chat": "دردشة",
         "stv-desc": "لعبة تتحدث كثيرًا. مثل cookie clicker ولكن 🇷🇺🇷🇺🇷🇺.",
         "chat-desc": "ليس لديك ديسكورد؟ استخدم CHATP2P.",
-        "created-by": "بواسطة",
-        "open": "فتح",
-        "footer": "Hub — جميع المشاريع في مكان واحد",
+        "by-azizbek": "Azizbek",
+        "by-william": "William",
         dir: "rtl",
       },
       ru: {
         title: "Hub",
         subtitle: "Хаб личных проектов",
+        "nav-projects": "Проекты",
+        "nav-language": "Язык",
         "badge-game": "Игра",
         "badge-chat": "Чат",
         "stv-desc": "Игра, которая часто обновляется. Как cookie clicker, но 🇷🇺🇷🇺🇷🇺.",
         "chat-desc": "Нет Discord? Используй CHATP2P.",
-        "created-by": "Создано",
-        "open": "Открыть",
-        "footer": "Hub — все проекты в одном месте",
+        "by-azizbek": "Azizbek",
+        "by-william": "William",
         dir: "ltr",
       },
     };
@@ -357,14 +443,14 @@
         if (t[key] !== undefined) el.textContent = t[key];
       });
 
-      document.querySelectorAll('.lang-btn').forEach(btn => {
+      // Mark active lang button
+      document.querySelectorAll('.lang-section .sidebar-item').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('onclick') === `setLang('${code}')`);
       });
 
       localStorage.setItem('hub-lang', code);
     }
 
-    // Init: saved preference → Swedish
     const saved = localStorage.getItem('hub-lang');
     setLang(translations[saved] ? saved : 'sv');
   </script>
