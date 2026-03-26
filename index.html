@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hub</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f07030;
+      font-family: Arial, sans-serif;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      text-shadow: 1px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* ── Add more cards here by copying the .card block below ── */
+
+    .card {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .card-left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .card-button {
+      display: block;
+      background-color: #7b4fc9;
+      color: white;
+      text-decoration: none;
+      padding: 22px 24px;
+      border-radius: 16px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .card-button:hover {
+      background-color: #6a3db5;
+      transform: scale(1.02);
+    }
+
+    .card-description {
+      color: white;
+      font-size: 1rem;
+      line-height: 1.5;
+      padding: 0 4px;
+    }
+
+    .card-meta {
+      color: white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      padding-top: 4px;
+    }
+
+    .card-meta span {
+      display: block;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hub</h1>
+
+  <div class="cards">
+
+    <!-- ══ KORT 1 ══ -->
+    <div class="card">
+      <div class="card-left">
+        <a class="card-button" href="https://azizbekovski.github.io/spin-the-vodka/" target="_blank" rel="noopener">
+          Spin the vodka
+        </a>
+        <p class="card-description">
+          En spel som uppdaterar ofta. En spel som cookie clicker men 🇷🇺🇷🇺🇷🇺.
+        </p>
+      </div>
+      <div class="card-meta">
+        Skapades av:<br>
+        <span>Azizbek</span>
+      </div>
+    </div>
+
+    <!-- ══ KORT 2 ══ -->
+    <div class="card">
+      <div class="card-left">
+        <a class="card-button" href="https://good-player.github.io/chatp2p/" target="_blank" rel="noopener">
+          WILLIAM
+        </a>
+        <p class="card-description">
+          Har du ingen discord? Använd CHATP2P.
+        </p>
+      </div>
+      <div class="card-meta">
+        Skapades av:<br>
+        <span>William</span>
+      </div>
+    </div>
+
+    <!-- ══ LÄGG TILL FLER KORT HÄR ══
+    <div class="card">
+      <div class="card-left">
+        <a class="card-button" href="https://din-länk-här.com" target="_blank" rel="noopener">
+          Titel på projektet
+        </a>
+        <p class="card-description">
+          Beskrivning av projektet.
+        </p>
+      </div>
+      <div class="card-meta">
+        Skapades av:<br>
+        <span>Namn</span>
+      </div>
+    </div>
+    ══ SLUT PÅ MALL ══ -->
+
+  </div>
+
+</body>
+</html>
