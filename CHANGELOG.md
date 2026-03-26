@@ -1,3 +1,12 @@
+## v1.2.2
+- Full mobile layout redesign
+- Bottom tab bar: Projects, Changelog, Settings
+- Detail panel becomes a bottom sheet on mobile (slides up, tap backdrop to close)
+- Changelog and Settings accessible as separate mobile views
+- isMobile() detection for adaptive behavior
+- Sticky topbar on mobile
+- Safe-area padding for devices with home indicators
+
 ## v1.2.1
 - Fixed instant layout jump when opening detail panel — now smoothly animates width
 - Panel content fades and slides in after width expands, fades out before collapsing

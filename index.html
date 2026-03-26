@@ -731,16 +731,212 @@
       transform: scale(1.2);
     }
 
+    /* ── Mobile bottom tabs ── */
+    .mobile-tabs {
+      display: none;
+    }
+
+    .dp-handle {
+      display: none;
+    }
+
+    .mobile-view {
+      display: none;
+    }
+
+    .mobile-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 90;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .mobile-backdrop.visible {
+      display: block;
+    }
+
     /* ── Mobile ── */
     @media (max-width: 640px) {
+      body {
+        flex-direction: column;
+        overflow-x: hidden;
+      }
+
       .sidebar { display: none; }
-      .content { padding: 20px 16px; }
-      .topbar { padding: 12px 16px; }
-      .detail-panel { display: none !important; }
+
+      .main { flex-direction: column; }
+
+      .main-inner { min-height: calc(100vh - 64px); }
+
+      .topbar {
+        padding: 14px 16px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--bg);
+      }
+
+      .content {
+        padding: 16px 16px 24px;
+      }
+
+      /* Cards bigger tap target */
+      .card {
+        padding: 16px;
+      }
+
+      /* ── Bottom tab bar ── */
+      .mobile-tabs {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--sidebar);
+        border-top: 1px solid var(--border);
+        z-index: 100;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      .mobile-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 10px 0 12px;
+        background: none;
+        border: none;
+        color: var(--text-tertiary);
+        font-size: 10px;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        transition: color 0.15s;
+        letter-spacing: 0.01em;
+      }
+
+      .mobile-tab svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 1.8;
+      }
+
+      .mobile-tab.active {
+        color: var(--accent);
+      }
+
+      .mobile-tab.active svg {
+        stroke-width: 2.2;
+      }
+
+      /* ── Mobile views ── */
+      .mobile-view {
+        display: none;
+        padding: 20px 16px 80px;
+        animation: fadeUp 0.2s ease both;
+      }
+
+      .mobile-view.active {
+        display: block;
+      }
+
+      .content-view {
+        padding-bottom: 80px;
+      }
+
+      .mobile-view .sidebar-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      /* Changelog in mobile view — full height, no max-height cap */
+      .mobile-view .changelog {
+        max-height: none;
+        overflow: visible;
+        gap: 16px;
+      }
+
+      .mobile-view .cl-version { font-size: 12px; }
+      .mobile-view .cl-item    { font-size: 12.5px; }
+
+      /* Settings in mobile view */
+      .mobile-view .lang-row {
+        padding: 11px 10px;
+        font-size: 14px;
+      }
+
+      .mobile-view .lang-dot {
+        width: 9px;
+        height: 9px;
+      }
+
+      /* ── Detail panel → bottom sheet ── */
+      .dp-handle {
+        display: block;
+        width: 36px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 2px;
+        margin: 0 auto 18px;
+        flex-shrink: 0;
+      }
+
+      .detail-panel {
+        position: fixed !important;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100% !important;
+        max-height: 88vh;
+        border-left: none !important;
+        border-top: 1px solid var(--border);
+        border-radius: 16px 16px 0 0;
+        z-index: 110;
+        overflow-y: auto;
+        /* Override the width transition with a vertical one */
+        transition: transform 0.34s cubic-bezier(0.16,1,0.3,1),
+                    opacity   0.34s cubic-bezier(0.16,1,0.3,1) !important;
+        transform: translateY(100%);
+        opacity: 0;
+        display: flex !important;
+        min-height: unset;
+      }
+
+      .detail-panel.open {
+        transform: translateY(0);
+        opacity: 1;
+        width: 100% !important;
+        border-left-width: 0 !important;
+      }
+
+      .detail-panel.closing {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+
+      .dp-content {
+        width: 100%;
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        padding: 12px 20px 40px;
+        min-height: unset;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- Mobile backdrop -->
+  <div class="mobile-backdrop" id="mobile-backdrop" onclick="closeProject()"></div>
 
   <!-- Sidebar -->
   <nav class="sidebar">
@@ -750,7 +946,7 @@
         <polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
       Hub
-      <span class="sidebar-version" style="margin-left:auto;">v1.2.1</span>
+      <span class="sidebar-version" style="margin-left:auto;">v1.2.2</span>
     </div>
 
     <div class="changelog-header">
@@ -845,11 +1041,36 @@
       ══ SLUT PÅ MALL ══ -->
 
     </div>
+
+      <!-- Mobile: Changelog view -->
+      <div class="mobile-view" id="mobile-changelog-view">
+        <div class="changelog-header" style="margin-bottom:12px;">
+          <span class="sidebar-label" data-i18n="nav-changelog" style="margin:0;"></span>
+          <button class="changelog-refresh" onclick="loadChangelog()" id="cl-refresh-m" title="Refresh">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/>
+            </svg>
+          </button>
+        </div>
+        <div class="changelog" id="mobile-changelog"><div class="cl-spinner"></div></div>
+      </div>
+
+      <!-- Mobile: Settings view -->
+      <div class="mobile-view" id="mobile-settings-view">
+        <span class="sidebar-label" data-i18n="nav-settings" style="display:block; margin-bottom:4px;"></span>
+        <span class="sidebar-label" data-i18n="nav-language" style="font-size:10px; margin-bottom:6px; display:block;"></span>
+        <button class="lang-row mobile-lang-row" onclick="setLang('sv')">🇸🇪 Svenska<span class="lang-dot"></span></button>
+        <button class="lang-row mobile-lang-row" onclick="setLang('en')">🇬🇧 English<span class="lang-dot"></span></button>
+        <button class="lang-row mobile-lang-row" onclick="setLang('ar')">🇸🇦 العربية<span class="lang-dot"></span></button>
+        <button class="lang-row mobile-lang-row" onclick="setLang('ru')">🇷🇺 Русский<span class="lang-dot"></span></button>
+      </div>
+
     </div><!-- /main-inner -->
 
     <!-- Detail Panel -->
     <div class="detail-panel" id="detail-panel">
       <div class="dp-content">
+        <div class="dp-handle"></div>
         <div class="dp-topbar">
           <div class="dp-icon" id="dp-icon"></div>
           <button class="dp-close" onclick="closeProject()">✕</button>
@@ -880,6 +1101,32 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobile bottom tab bar -->
+  <nav class="mobile-tabs">
+    <button class="mobile-tab active" id="tab-projects" onclick="showMobileTab('projects')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      <span data-i18n="nav-projects"></span>
+    </button>
+    <button class="mobile-tab" id="tab-changelog" onclick="showMobileTab('changelog')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+        <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+      <span data-i18n="nav-changelog"></span>
+    </button>
+    <button class="mobile-tab" id="tab-settings" onclick="showMobileTab('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      <span data-i18n="nav-settings"></span>
+    </button>
+  </nav>
 
   <script>
     const translations = {
@@ -967,9 +1214,15 @@
         if (t[key] !== undefined) el.textContent = t[key];
       });
 
-      // Mark active lang button
+      // Mark active lang buttons (sidebar + mobile)
       document.querySelectorAll('.lang-row').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('onclick') === `setLang('${code}')`);
+      });
+
+      // Re-apply i18n on mobile tab labels
+      document.querySelectorAll('.mobile-tab [data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
       });
 
       localStorage.setItem('hub-lang', code);
@@ -978,47 +1231,52 @@
     const saved = localStorage.getItem('hub-lang');
     setLang(translations[saved] ? saved : 'sv');
 
+    function renderChangelog(text, el) {
+      el.innerHTML = '';
+      const blocks = text.trim().split(/^(?=## )/m);
+      blocks.forEach((block, i) => {
+        if (!block.trim()) return;
+        const lines   = block.trim().split('\n');
+        const heading = lines[0].replace(/^## /, '').trim();
+        const items   = lines.slice(1).filter(l => l.trim().startsWith('-'));
+        const div = document.createElement('div');
+        div.className = 'cl-block';
+        div.style.animationDelay = (i * 0.05) + 's';
+        const h = document.createElement('div');
+        h.className = 'cl-version';
+        h.textContent = heading;
+        div.appendChild(h);
+        items.forEach(item => {
+          const p = document.createElement('div');
+          p.className = 'cl-item';
+          p.textContent = item.replace(/^- /, '');
+          div.appendChild(p);
+        });
+        el.appendChild(div);
+      });
+      el.scrollTop = 0;
+      el.dataset.loaded = '1';
+    }
+
     // Load and render CHANGELOG.md
     function loadChangelog() {
-      const el = document.getElementById('changelog');
+      const el  = document.getElementById('changelog');
       const btn = document.getElementById('cl-refresh');
       el.innerHTML = '<div class="cl-spinner"></div>';
-      btn.classList.add('spinning');
+      if (btn) btn.classList.add('spinning');
+
+      // Also reset mobile changelog so it re-fetches
+      const mEl = document.getElementById('mobile-changelog');
+      if (mEl) { mEl.innerHTML = '<div class="cl-spinner"></div>'; delete mEl.dataset.loaded; }
 
       fetch('CHANGELOG.md?v=' + Date.now())
         .then(r => r.text())
         .then(text => {
-          el.innerHTML = '';
-          const blocks = text.trim().split(/^(?=## )/m);
-          blocks.forEach((block, i) => {
-            if (!block.trim()) return;
-            const lines = block.trim().split('\n');
-            const heading = lines[0].replace(/^## /, '').trim();
-            const items = lines.slice(1).filter(l => l.trim().startsWith('-'));
-            const div = document.createElement('div');
-            div.className = 'cl-block';
-            div.style.animationDelay = (i * 0.06) + 's';
-            const h = document.createElement('div');
-            h.className = 'cl-version';
-            h.textContent = heading;
-            div.appendChild(h);
-            items.forEach(item => {
-              const p = document.createElement('div');
-              p.className = 'cl-item';
-              p.textContent = item.replace(/^- /, '');
-              div.appendChild(p);
-            });
-            el.appendChild(div);
-          });
-          // Scroll to top to show newest entry
-          el.scrollTop = 0;
+          renderChangelog(text, el);
+          if (mEl) renderChangelog(text, mEl);
         })
-        .catch(() => {
-          el.textContent = '—';
-        })
-        .finally(() => {
-          btn.classList.remove('spinning');
-        });
+        .catch(() => { el.textContent = '—'; })
+        .finally(() => { if (btn) btn.classList.remove('spinning'); });
     }
 
     loadChangelog();
@@ -1046,11 +1304,33 @@
 
     let activeProject = null;
 
+    function isMobile() {
+      return window.innerWidth <= 640;
+    }
+
+    function showMobileTab(tab) {
+      // Update tab buttons
+      document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+
+      // Show/hide views
+      const contentView = document.querySelector('.content');
+      const clView      = document.getElementById('mobile-changelog-view');
+      const setView     = document.getElementById('mobile-settings-view');
+
+      contentView.classList.toggle('content-view', tab === 'projects');
+      contentView.style.display      = tab === 'projects' ? '' : 'none';
+      clView.classList.toggle('active', tab === 'changelog');
+      setView.classList.toggle('active', tab === 'settings');
+
+      // If opening changelog on mobile, populate it
+      if (tab === 'changelog') loadMobileChangelog();
+    }
+
     function openProject(id) {
       const p = projects[id];
       if (!p) return;
 
-      // If same card clicked, close
       if (activeProject === id) { closeProject(); return; }
       activeProject = id;
 
@@ -1073,27 +1353,41 @@
       document.getElementById('dp-link').href           = p.url;
       document.getElementById('dp-copy').classList.remove('copied');
 
-      // Re-run i18n on panel static strings
       document.querySelectorAll('#detail-panel [data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (t[key]) el.textContent = t[key];
       });
 
-      // Show panel
+      // Show panel + backdrop on mobile
       const panel = document.getElementById('detail-panel');
       panel.classList.remove('closing');
       panel.classList.add('open');
+      if (isMobile()) {
+        document.getElementById('mobile-backdrop').classList.add('visible');
+        document.body.style.overflow = 'hidden';
+      }
     }
 
     function closeProject() {
       const panel = document.getElementById('detail-panel');
       panel.classList.add('closing');
-      // Wait for content to fade out, then collapse width
       setTimeout(() => {
         panel.classList.remove('open', 'closing');
-      }, 160);
+      }, isMobile() ? 300 : 160);
       document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('mobile-backdrop').classList.remove('visible');
+      document.body.style.overflow = '';
       activeProject = null;
+    }
+
+    // Populate the mobile changelog view separately (sidebar changelog is always loaded)
+    function loadMobileChangelog() {
+      const el = document.getElementById('mobile-changelog');
+      if (!el || el.dataset.loaded) return;
+      fetch('CHANGELOG.md?v=' + Date.now())
+        .then(r => r.text())
+        .then(text => renderChangelog(text, el))
+        .catch(() => { el.textContent = '—'; });
     }
 
     function copyLink() {
