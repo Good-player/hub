@@ -316,6 +316,118 @@
       height: 14px;
     }
 
+    /* ── Animations ── */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Page load — sidebar */
+    .sidebar {
+      animation: slideInLeft 0.35s ease both;
+    }
+
+    /* Page load — cards stagger */
+    .card {
+      animation: fadeUp 0.35s ease both;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.19s; }
+    .card:nth-child(4) { animation-delay: 0.26s; }
+
+    /* Page load — topbar */
+    .topbar {
+      animation: fadeIn 0.3s ease both;
+    }
+
+    /* Card hover — arrow slides right */
+    .card:hover .card-arrow svg {
+      transform: translateX(3px);
+      transition: transform 0.2s ease;
+    }
+    .card-arrow svg {
+      transition: transform 0.2s ease;
+    }
+
+    /* Card hover — icon pulse */
+    .card:hover .card-icon {
+      transform: scale(1.08);
+      transition: transform 0.2s ease;
+    }
+    .card-icon {
+      transition: transform 0.2s ease;
+    }
+
+    /* Changelog label row */
+    .changelog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-right: 6px;
+    }
+
+    .changelog-refresh {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+
+    .changelog-refresh:hover { color: var(--text-secondary); }
+
+    .changelog-refresh svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .changelog-refresh.spinning svg {
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* Changelog spinner */
+    .cl-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 12px auto;
+    }
+
+    /* Changelog item entrance */
+    .cl-block {
+      animation: fadeUp 0.25s ease both;
+    }
+
+    /* Sidebar item hover nudge */
+    .sidebar-item {
+      transition: background 0.15s, color 0.15s, transform 0.15s;
+    }
+    .sidebar-item:hover {
+      transform: translateX(2px);
+    }
+
     /* ── Mobile ── */
     @media (max-width: 640px) {
       .sidebar { display: none; }
@@ -334,11 +446,19 @@
         <polyline points="9 22 9 12 15 12 15 22"/>
       </svg>
       Hub
-      <span class="sidebar-version" style="margin-left:auto;">v1.1.6</span>
+      <span class="sidebar-version" style="margin-left:auto;">v1.1.7</span>
     </div>
 
-    <div class="sidebar-label" data-i18n="nav-changelog"></div>
-    <div class="changelog" id="changelog">…</div>
+    <div class="changelog-header">
+      <div class="sidebar-label" data-i18n="nav-changelog" style="margin:0; padding-left:10px;"></div>
+      <button class="changelog-refresh" id="cl-refresh" onclick="loadChangelog()" title="Refresh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 .49-4.95"/>
+        </svg>
+      </button>
+    </div>
+    <div class="changelog" id="changelog"><div class="cl-spinner"></div></div>
 
     <!-- Settings -->
     <div class="lang-section" style="margin-top: auto;">
@@ -508,35 +628,49 @@
     setLang(translations[saved] ? saved : 'sv');
 
     // Load and render CHANGELOG.md
-    fetch('CHANGELOG.md?v=' + Date.now())
-      .then(r => r.text())
-      .then(text => {
-        const el = document.getElementById('changelog');
-        el.innerHTML = '';
-        // Split into version blocks by "## vX.X.X" headings
-        const blocks = text.trim().split(/^(?=## )/m);
-        blocks.forEach(block => {
-          if (!block.trim()) return;
-          const lines = block.trim().split('\n');
-          const heading = lines[0].replace(/^## /, '').trim();
-          const items = lines.slice(1).filter(l => l.trim().startsWith('-'));
-          const div = document.createElement('div');
-          const h = document.createElement('div');
-          h.className = 'cl-version';
-          h.textContent = heading;
-          div.appendChild(h);
-          items.forEach(item => {
-            const p = document.createElement('div');
-            p.className = 'cl-item';
-            p.textContent = item.replace(/^- /, '');
-            div.appendChild(p);
+    function loadChangelog() {
+      const el = document.getElementById('changelog');
+      const btn = document.getElementById('cl-refresh');
+      el.innerHTML = '<div class="cl-spinner"></div>';
+      btn.classList.add('spinning');
+
+      fetch('CHANGELOG.md?v=' + Date.now())
+        .then(r => r.text())
+        .then(text => {
+          el.innerHTML = '';
+          const blocks = text.trim().split(/^(?=## )/m);
+          blocks.forEach((block, i) => {
+            if (!block.trim()) return;
+            const lines = block.trim().split('\n');
+            const heading = lines[0].replace(/^## /, '').trim();
+            const items = lines.slice(1).filter(l => l.trim().startsWith('-'));
+            const div = document.createElement('div');
+            div.className = 'cl-block';
+            div.style.animationDelay = (i * 0.06) + 's';
+            const h = document.createElement('div');
+            h.className = 'cl-version';
+            h.textContent = heading;
+            div.appendChild(h);
+            items.forEach(item => {
+              const p = document.createElement('div');
+              p.className = 'cl-item';
+              p.textContent = item.replace(/^- /, '');
+              div.appendChild(p);
+            });
+            el.appendChild(div);
           });
-          el.appendChild(div);
+          // Scroll to top to show newest entry
+          el.scrollTop = 0;
+        })
+        .catch(() => {
+          el.textContent = '—';
+        })
+        .finally(() => {
+          btn.classList.remove('spinning');
         });
-      })
-      .catch(() => {
-        document.getElementById('changelog').textContent = '—';
-      });
+    }
+
+    loadChangelog();
   </script>
 
 </body>
