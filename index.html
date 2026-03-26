@@ -351,7 +351,7 @@
 
     <!-- Version -->
     <div class="lang-section" style="border-top:none; padding-top:4px;">
-      <div class="sidebar-version">v1.1.4</div>
+      <div class="sidebar-version">v1.1.5</div>
     </div>
   </nav>
 
@@ -511,7 +511,7 @@
     setLang(translations[saved] ? saved : 'sv');
 
     // Load and render CHANGELOG.md
-    fetch('CHANGELOG.md')
+    fetch('CHANGELOG.md?v=' + Date.now())
       .then(r => r.text())
       .then(text => {
         const el = document.getElementById('changelog');
