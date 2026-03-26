@@ -299,7 +299,7 @@
     const translations = {
       sv: {
         title: "Hub",
-        subtitle: "Utforska projekt skapade av oss",
+        subtitle: "En hub för personliga projekt",
         "badge-game": "Spel",
         "badge-chat": "Chatt",
         "stv-desc": "En spel som uppdaterar ofta. En spel som cookie clicker men 🇷🇺🇷🇺🇷🇺.",
@@ -311,7 +311,7 @@
       },
       en: {
         title: "Hub",
-        subtitle: "Explore projects made by us",
+        subtitle: "A hub for personal projects",
         "badge-game": "Game",
         "badge-chat": "Chat",
         "stv-desc": "A game that updates often. Like cookie clicker but 🇷🇺🇷🇺🇷🇺.",
@@ -323,7 +323,7 @@
       },
       ar: {
         title: "Hub",
-        subtitle: "اكتشف المشاريع التي صنعناها",
+        subtitle: "مركز للمشاريع الشخصية",
         "badge-game": "لعبة",
         "badge-chat": "دردشة",
         "stv-desc": "لعبة تتحدث كثيرًا. مثل cookie clicker ولكن 🇷🇺🇷🇺🇷🇺.",
@@ -335,7 +335,7 @@
       },
       ru: {
         title: "Hub",
-        subtitle: "Исследуй наши проекты",
+        subtitle: "Хаб личных проектов",
         "badge-game": "Игра",
         "badge-chat": "Чат",
         "stv-desc": "Игра, которая часто обновляется. Как cookie clicker, но 🇷🇺🇷🇺🇷🇺.",
@@ -364,11 +364,9 @@
       localStorage.setItem('hub-lang', code);
     }
 
-    // Init: saved preference → browser language → Swedish
+    // Init: saved preference → Swedish
     const saved = localStorage.getItem('hub-lang');
-    const browser = navigator.language.slice(0, 2);
-    const fallback = translations[saved] ? saved : translations[browser] ? browser : 'sv';
-    setLang(fallback);
+    setLang(translations[saved] ? saved : 'sv');
   </script>
 
 </body>
