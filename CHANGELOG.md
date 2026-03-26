@@ -1,3 +1,6 @@
+## v1.1.5
+- Force changelog to bypass browser cache on every load
+
 ## v1.1.4
 - Removed project list from sidebar
 - Added Settings section to sidebar
