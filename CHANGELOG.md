@@ -1,3 +1,11 @@
+## v1.1.7
+- Changelog auto-scrolls to top on load
+- Spinning loader while changelog is fetching
+- Refresh button on changelog with spin animation
+- Page load animations: sidebar slides in, cards fade up with stagger
+- Card hover: arrow slides right, icon scales up
+- Sidebar items nudge right on hover
+
 ## v1.1.6
 - Moved version display to the logo area in the sidebar
 
