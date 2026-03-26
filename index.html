@@ -29,12 +29,47 @@
 
     body {
       background-color: var(--bg);
-      background-image:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,92,252,0.18) 0%, transparent 70%);
+      background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,92,252,0.18) 0%, transparent 70%);
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
       padding: 60px 20px 80px;
       color: var(--text-primary);
+    }
+
+    /* RTL support for Arabic */
+    body.rtl { direction: rtl; }
+
+    /* ── Language switcher ── */
+    .lang-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 7px 16px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .lang-btn:hover {
+      border-color: rgba(124,92,252,0.4);
+      color: var(--text-primary);
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
 
     /* ── Header ── */
@@ -97,7 +132,6 @@
       border-color: rgba(124,92,252,0.35);
     }
 
-    /* ── Card top row ── */
     .card-header {
       display: flex;
       align-items: center;
@@ -125,7 +159,6 @@
       flex-shrink: 0;
     }
 
-    /* ── Description ── */
     .card-description {
       font-size: 0.92rem;
       color: var(--text-secondary);
@@ -133,7 +166,6 @@
       flex: 1;
     }
 
-    /* ── Footer ── */
     .card-footer {
       display: flex;
       align-items: center;
@@ -165,7 +197,7 @@
       padding: 9px 18px;
       border-radius: 10px;
       transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 0 0 0 var(--accent-glow);
+      white-space: nowrap;
     }
 
     .card-link:hover {
@@ -179,7 +211,6 @@
       flex-shrink: 0;
     }
 
-    /* ── Footer branding ── */
     .site-footer {
       text-align: center;
       margin-top: 60px;
@@ -191,9 +222,16 @@
 </head>
 <body>
 
+  <div class="lang-switcher">
+    <button class="lang-btn" onclick="setLang('sv')">🇸🇪 Svenska</button>
+    <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
+    <button class="lang-btn" onclick="setLang('ar')">🇸🇦 العربية</button>
+    <button class="lang-btn" onclick="setLang('ru')">🇷🇺 Русский</button>
+  </div>
+
   <header>
-    <h1>Hub</h1>
-    <p>Utforska projekt skapade av oss</p>
+    <h1 data-i18n="title">Hub</h1>
+    <p data-i18n="subtitle"></p>
   </header>
 
   <div class="grid">
@@ -202,15 +240,13 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Spin the vodka</span>
-        <span class="card-badge">Spel</span>
+        <span class="card-badge" data-i18n="badge-game"></span>
       </div>
-      <p class="card-description">
-        En spel som uppdaterar ofta. En spel som cookie clicker men 🇷🇺🇷🇺🇷🇺.
-      </p>
+      <p class="card-description" data-i18n="stv-desc"></p>
       <div class="card-footer">
-        <div class="card-author">Skapades av <strong>Azizbek</strong></div>
+        <div class="card-author"><span data-i18n="created-by"></span> <strong>Azizbek</strong></div>
         <a class="card-link" href="https://azizbekovski.github.io/spin-the-vodka/" target="_blank" rel="noopener">
-          Öppna
+          <span data-i18n="open"></span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 17L17 7M17 7H7M17 7v10"/>
           </svg>
@@ -222,15 +258,13 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">CHATp2p</span>
-        <span class="card-badge">Chatt</span>
+        <span class="card-badge" data-i18n="badge-chat"></span>
       </div>
-      <p class="card-description">
-        Har du ingen discord? Använd CHATP2P.
-      </p>
+      <p class="card-description" data-i18n="chat-desc"></p>
       <div class="card-footer">
-        <div class="card-author">Skapades av <strong>William</strong></div>
+        <div class="card-author"><span data-i18n="created-by"></span> <strong>William</strong></div>
         <a class="card-link" href="https://good-player.github.io/chatp2p/" target="_blank" rel="noopener">
-          Öppna
+          <span data-i18n="open"></span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 17L17 7M17 7H7M17 7v10"/>
           </svg>
@@ -242,13 +276,13 @@
     <div class="card">
       <div class="card-header">
         <span class="card-title">Titel</span>
-        <span class="card-badge">Kategori</span>
+        <span class="card-badge" data-i18n="badge-game"></span>
       </div>
       <p class="card-description">Beskrivning av projektet.</p>
       <div class="card-footer">
-        <div class="card-author">Skapades av <strong>Namn</strong></div>
+        <div class="card-author"><span data-i18n="created-by"></span> <strong>Namn</strong></div>
         <a class="card-link" href="https://din-länk.com" target="_blank" rel="noopener">
-          Öppna
+          <span data-i18n="open"></span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 17L17 7M17 7H7M17 7v10"/>
           </svg>
@@ -259,7 +293,81 @@
 
   </div>
 
-  <footer class="site-footer">Hub &mdash; alla projekt på ett ställe</footer>
+  <footer class="site-footer" data-i18n="footer"></footer>
+
+  <script>
+    const translations = {
+      sv: {
+        title: "Hub",
+        subtitle: "En hub för personliga projekt",
+        "badge-game": "Spel",
+        "badge-chat": "Chatt",
+        "stv-desc": "En spel som uppdaterar ofta. En spel som cookie clicker men 🇷🇺🇷🇺🇷🇺.",
+        "chat-desc": "Har du ingen discord? Använd CHATP2P.",
+        "created-by": "Skapades av",
+        "open": "Öppna",
+        "footer": "Hub — alla projekt på ett ställe",
+        dir: "ltr",
+      },
+      en: {
+        title: "Hub",
+        subtitle: "A hub for personal projects",
+        "badge-game": "Game",
+        "badge-chat": "Chat",
+        "stv-desc": "A game that updates often. Like cookie clicker but 🇷🇺🇷🇺🇷🇺.",
+        "chat-desc": "No discord? Use CHATP2P.",
+        "created-by": "Created by",
+        "open": "Open",
+        "footer": "Hub — all projects in one place",
+        dir: "ltr",
+      },
+      ar: {
+        title: "Hub",
+        subtitle: "مركز للمشاريع الشخصية",
+        "badge-game": "لعبة",
+        "badge-chat": "دردشة",
+        "stv-desc": "لعبة تتحدث كثيرًا. مثل cookie clicker ولكن 🇷🇺🇷🇺🇷🇺.",
+        "chat-desc": "ليس لديك ديسكورد؟ استخدم CHATP2P.",
+        "created-by": "بواسطة",
+        "open": "فتح",
+        "footer": "Hub — جميع المشاريع في مكان واحد",
+        dir: "rtl",
+      },
+      ru: {
+        title: "Hub",
+        subtitle: "Хаб личных проектов",
+        "badge-game": "Игра",
+        "badge-chat": "Чат",
+        "stv-desc": "Игра, которая часто обновляется. Как cookie clicker, но 🇷🇺🇷🇺🇷🇺.",
+        "chat-desc": "Нет Discord? Используй CHATP2P.",
+        "created-by": "Создано",
+        "open": "Открыть",
+        "footer": "Hub — все проекты в одном месте",
+        dir: "ltr",
+      },
+    };
+
+    function setLang(code) {
+      const t = translations[code];
+      document.documentElement.lang = code;
+      document.body.classList.toggle('rtl', t.dir === 'rtl');
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick') === `setLang('${code}')`);
+      });
+
+      localStorage.setItem('hub-lang', code);
+    }
+
+    // Init: saved preference → Swedish
+    const saved = localStorage.getItem('hub-lang');
+    setLang(translations[saved] ? saved : 'sv');
+  </script>
 
 </body>
 </html>
